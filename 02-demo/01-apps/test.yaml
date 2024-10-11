@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: busybox-test
+  labels:
+    app: busybox-test
+  annotations:
+    io.cilium.proxy-visibility: "<Egress/53/UDP/DNS>,<Egress/9007/TCP/HTTP>,<Egress/9000/TCP/HTTP>,<Ingress/9000/TCP/HTTP>"
+spec:
+  selector:
+    matchLabels:
+      component: busybox-test
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: busybox-test
+        component: busybox-test
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.28
+        args:
+        - sh
+        - -c
+        - | 
+          while true; do wget -O- goldie-main:9000/parts/body/body.svg ; sleep 0.5; done

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: busybox-sleep
+  labels:
+    app: busybox-sleep
+  annotations:
+    io.cilium.proxy-visibility: "<Egress/53/UDP/DNS>,<Egress/9007/TCP/HTTP>,<Egress/9000/TCP/HTTP>,<Ingress/9000/TCP/HTTP>"
+spec:
+  selector:
+    matchLabels:
+      component: busybox-sleep
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: busybox-sleep
+        component: busybox-sleep
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.28
+        args:
+        - sleep
+        - "1000000"
